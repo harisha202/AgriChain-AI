@@ -1,0 +1,54 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>AgriChain AI</title>
+  </head>
+  <body>
+    <div id="root">
+      <style>
+        .splash-screen {
+          display: flex;
+          flex-direction: column;
+          align-items: center;
+          justify-content: center;
+          height: 100vh;
+          background-color: #f8fafc;
+          font-family: system-ui, -apple-system, sans-serif;
+        }
+        .splash-logo {
+          width: 80px;
+          height: 80px;
+          margin-bottom: 24px;
+          animation: pulse 2s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+        }
+        .splash-text {
+          font-size: 24px;
+          font-weight: 700;
+          color: #0f172a;
+          margin: 0;
+        }
+        .splash-subtext {
+          font-size: 14px;
+          color: #64748b;
+          margin-top: 8px;
+        }
+        @keyframes pulse {
+          0%, 100% { opacity: 1; transform: scale(1); }
+          50% { opacity: .7; transform: scale(0.95); }
+        }
+      </style>
+      <div class="splash-screen">
+        <svg class="splash-logo" viewBox="0 0 24 24" fill="none" stroke="#1F7A3F" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M11 20A7 7 0 0 1 9.8 6.1C15.5 5 17 4.48 19 2c1 2 2 4.18 2 8 0 5.5-4.78 10-10 10Z"></path>
+          <path d="M2 21c0-3 1.85-5.36 5.08-6C9.5 14.52 12 13 13 12"></path>
+        </svg>
+        <h1 class="splash-text">AgriChain AI</h1>
+        <p class="splash-subtext">Loading Supply Chain Intelligence...</p>
+      </div>
+    </div>
+    <script type="module" src="/src/main.jsx"></script>
+  </body>
+</html>

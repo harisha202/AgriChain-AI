@@ -1,0 +1,17 @@
+fastapi
+uvicorn[standard]
+pydantic
+pydantic-settings
+sqlalchemy
+alembic
+python-jose[cryptography]
+passlib[bcrypt]
+python-multipart
+pandas
+numpy
+scikit-learn
+statsmodels
+joblib
+pytest
+anthropic
+google-generativeai
