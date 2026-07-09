@@ -1,4 +1,5 @@
 import React, { createContext, useContext, useState, useEffect } from 'react';
+import client from '../api/client';
 
 const AuthContext = createContext(null);
 
@@ -14,21 +15,13 @@ export const AuthProvider = ({ children }) => {
         return;
       }
       try {
-        const response = await fetch('http://localhost:8000/api/auth/me', {
-          headers: {
-            'Authorization': `Bearer ${token}`
-          }
-        });
-        if (response.ok) {
-          const userData = await response.json();
-          setUser(userData);
-        } else {
-          localStorage.removeItem('token');
-          setToken(null);
-          setUser(null);
-        }
+        const response = await client.get('/api/auth/me');
+        setUser(response.data);
       } catch (error) {
         console.error('Failed to fetch user', error);
+        localStorage.removeItem('token');
+        setToken(null);
+        setUser(null);
       } finally {
         setLoading(false);
       }
@@ -42,40 +35,28 @@ export const AuthProvider = ({ children }) => {
     formData.append('username', email); // FastAPI OAuth2 uses username
     formData.append('password', password);
 
-    const response = await fetch('http://localhost:8000/api/auth/login', {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/x-www-form-urlencoded',
-      },
-      body: formData.toString()
-    });
-
-    if (!response.ok) {
-      const errorData = await response.json();
-      throw new Error(errorData.detail || 'Login failed');
+    try {
+      const response = await client.post('/api/auth/login', formData.toString(), {
+        headers: {
+          'Content-Type': 'application/x-www-form-urlencoded',
+        }
+      });
+      const data = response.data;
+      localStorage.setItem('token', data.access_token);
+      setToken(data.access_token);
+      return data;
+    } catch (error) {
+      throw new Error(error.response?.data?.detail || 'Login failed');
     }
-
-    const data = await response.json();
-    localStorage.setItem('token', data.access_token);
-    setToken(data.access_token);
-    return data;
   };
 
   const signup = async (name, email, password, role = 'farmer') => {
-    const response = await fetch('http://localhost:8000/api/auth/signup', {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify({ name, email, password, role })
-    });
-
-    if (!response.ok) {
-      const errorData = await response.json();
-      throw new Error(errorData.detail || 'Signup failed');
+    try {
+      const response = await client.post('/api/auth/signup', { name, email, password, role });
+      return response.data;
+    } catch (error) {
+      throw new Error(error.response?.data?.detail || 'Signup failed');
     }
-
-    return response.json();
   };
 
   const logout = () => {

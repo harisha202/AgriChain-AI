@@ -27,7 +27,8 @@ export default function Analytics() {
   if (!data || data.message) return <div className="p-8 text-slate-500">{data?.message || 'Failed to load data.'}</div>;
 
   return (
-    <div className="p-8 max-w-7xl mx-auto">
+    <div className="min-h-full bg-indigo-50/50 w-full">
+      <div className="p-8 max-w-7xl mx-auto">
       <div className="flex items-center gap-3 mb-8">
         <div className="p-3 bg-primary/10 rounded-lg text-primary">
           <BarChart2 className="w-6 h-6" />
@@ -127,6 +128,7 @@ export default function Analytics() {
             </ResponsiveContainer>
           </div>
         </div>
+      </div>
       </div>
     </div>
   );

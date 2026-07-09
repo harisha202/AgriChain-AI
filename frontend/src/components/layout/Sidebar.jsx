@@ -4,7 +4,6 @@ import { LayoutDashboard, Leaf, Package, TrendingUp, Truck, BarChart2, MessageSq
 import clsx from 'clsx';
 
 const navItems = [
-  { name: 'Dashboard', path: '/dashboard', icon: LayoutDashboard },
   { name: 'Crop AI', path: '/crop', icon: Leaf },
   { name: 'Inventory', path: '/inventory', icon: Package },
   { name: 'Demand Forecast', path: '/forecast', icon: TrendingUp },

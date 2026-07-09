@@ -42,7 +42,7 @@ export default function Assistant() {
   };
 
   return (
-    <div className="flex-1 flex flex-col h-full bg-slate-50 relative">
+    <div className="flex-1 flex flex-col h-full bg-teal-50/50 relative">
       <div className="bg-white border-b border-slate-200 px-8 py-6 flex items-center justify-between z-10 shadow-sm">
         <div className="flex items-center gap-3">
           <div className="p-3 bg-primary/10 rounded-lg text-primary">
@@ -96,7 +96,7 @@ export default function Assistant() {
               value={input}
               onChange={(e) => setInput(e.target.value)}
               placeholder="Ask about inventory levels, demand forecasts, or logistics..."
-              className="w-full pl-6 pr-16 py-4 rounded-full border border-slate-300 focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent shadow-sm bg-slate-50 transition-all text-slate-700"
+              className="w-full pl-6 pr-16 py-4 rounded-full border border-slate-300 focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent shadow-sm bg-white transition-all text-slate-700"
             />
             <button
               type="submit"

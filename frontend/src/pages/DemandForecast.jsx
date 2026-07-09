@@ -9,6 +9,7 @@ export default function DemandForecast() {
   const [forecastData, setForecastData] = useState([]);
   const [accuracyMetrics, setAccuracyMetrics] = useState([]);
   const [loading, setLoading] = useState(false);
+  const [error, setError] = useState(null);
 
   React.useEffect(() => {
     const fetchAccuracy = async () => {
@@ -26,6 +27,7 @@ export default function DemandForecast() {
 
   const fetchForecast = async () => {
     setLoading(true);
+    setError(null);
     try {
       const response = await client.post('/api/forecast/demand', {
         crop_name: cropName, 
@@ -36,13 +38,15 @@ export default function DemandForecast() {
       }
     } catch (error) {
       console.error(error);
+      setError(error.response?.data?.detail || "Failed to generate forecast. Please try again.");
     } finally {
       setLoading(false);
     }
   };
 
   return (
-    <div className="p-8 max-w-6xl mx-auto">
+    <div className="min-h-full bg-purple-50/50 w-full">
+      <div className="p-8 max-w-6xl mx-auto">
       <div className="flex items-center gap-3 mb-6">
         <div className="p-3 bg-primary/10 rounded-lg text-primary">
           <TrendingUp className="w-6 h-6" />
@@ -72,6 +76,12 @@ export default function DemandForecast() {
         </button>
       </div>
 
+      {error && (
+        <div className="mb-8 p-4 bg-red-50 border border-red-200 text-red-700 rounded-lg">
+          {error}
+        </div>
+      )}
+
       {forecastData.length > 0 && (
         <div className="card-base p-6">
           <h2 className="text-lg font-semibold text-slate-900 mb-6">Predicted Demand for {cropName.toUpperCase()}</h2>
@@ -97,13 +107,16 @@ export default function DemandForecast() {
               </div>
               <div className="text-right">
                 <p className="text-lg font-bold text-slate-900">
-                  MAE: {accuracyMetrics.find(a => a.crop_name.toLowerCase() === cropName.toLowerCase()).mae.toFixed(2)} kg
+                  MAE: {accuracyMetrics.find(a => a.crop_name.toLowerCase() === cropName.toLowerCase()).mae != null 
+                    ? `${accuracyMetrics.find(a => a.crop_name.toLowerCase() === cropName.toLowerCase()).mae.toFixed(2)} kg` 
+                    : 'N/A'}
                 </p>
               </div>
             </div>
           )}
         </div>
       )}
+      </div>
     </div>
   );
 }
