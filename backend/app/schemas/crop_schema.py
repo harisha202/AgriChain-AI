@@ -12,3 +12,6 @@ class CropPredictionRequest(BaseModel):
 class CropPredictionResponse(BaseModel):
     predicted_crop: str
     confidence: float
+    optimal_season: str = "Unknown"
+    growth_duration: str = "Unknown"
+    weather_insight: str = "Unknown"

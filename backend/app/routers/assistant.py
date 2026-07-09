@@ -2,8 +2,14 @@ from fastapi import APIRouter, Depends, HTTPException
 from pydantic import BaseModel
 from typing import List, Dict
 import os
-import random
+import anthropic
 from app.dependencies import get_current_user
+from app.database import get_db
+from sqlalchemy.orm import Session
+from app.models.inventory import Inventory
+from app.models.shipment import Shipment
+from app.models.sales_history import SalesHistory
+from app.models.crop_query import CropQuery
 from app.models.user import User
 
 router = APIRouter(prefix="/api/assistant", tags=["assistant"])
@@ -16,25 +22,52 @@ class ChatRequest(BaseModel):
     messages: List[ChatMessage]
 
 @router.post("/ask")
-def ask_assistant(request: ChatRequest, current_user: User = Depends(get_current_user)):
-    user_query = request.messages[-1].content.lower()
-    
-    # In a real production app, you would pass `request.messages` to the Anthropic or OpenAI SDK here.
-    # Since we might not have an active API key in this environment, we use an intelligent fallback logic
-    # that simulates an SCM-aware AI assistant grounded in the app's context.
-    
-    response_text = ""
-    if "inventory" in user_query or "stock" in user_query:
-        response_text = "Based on your current inventory metrics, we have 2 shipments of Rice and Maize currently in transit. We have flagged a Low Stock Alert for Wheat in Warehouse 1, which may cause a bottleneck given the SARIMA demand forecast for next month."
-    elif "forecast" in user_query or "demand" in user_query:
-        response_text = "The SARIMA model projects a 15% increase in demand for Rice over the next 14 days due to seasonal trends. I recommend adjusting your reorder points to prevent stockouts."
-    elif "logistics" in user_query or "delay" in user_query:
-        response_text = "Shipment SHP-9923 (Maize) is currently marked as 'Delayed' in route to Warehouse 2. You may want to contact the East Farm dispatch to reroute the upcoming schedule."
-    else:
-        response_text = "I am the AgriChain AI Assistant. I can analyze your crop predictions, inventory levels, and logistics tracking. Ask me about your stock, demand forecasts, or shipment statuses!"
+def ask_assistant(request: ChatRequest, db: Session = Depends(get_db), current_user: User = Depends(get_current_user)):
+    api_key = os.getenv("ANTHROPIC_API_KEY")
+    if not api_key:
+        return {"reply": "API key not found. Please add ANTHROPIC_API_KEY to your .env file."}
         
-    # Simulate network delay for AI thinking
-    import time
-    time.sleep(1)
-    
-    return {"reply": response_text}
+    try:
+        # Fetch live data context
+        inventory = db.query(Inventory).all()
+        shipments = db.query(Shipment).all()
+        sales = db.query(SalesHistory).all()
+        crop_queries = db.query(CropQuery).order_by(CropQuery.id.desc()).limit(3).all()
+        
+        inv_str = ", ".join([f"{i.quantity_kg}kg of {i.crop_name} in {i.warehouse_location} (Status: {i.status})" for i in inventory])
+        shp_str = ", ".join([f"Shipment {s.shipment_id}: {s.crop_name} to {s.destination} (Status: {s.status})" for s in shipments])
+        sales_str = ", ".join([f"Sold {s.quantity_sold}kg of {s.crop_name} in {s.region} for ${s.price_per_kg}/kg" for s in sales])
+        crop_str = ", ".join([f"Predicted {c.predicted_crop} for NPK({c.N},{c.P},{c.K})" for c in crop_queries])
+        
+        system_prompt = f"""You are AgriChain AI, an expert supply chain and smart farming assistant. 
+You help users optimize their inventory, track logistics, understand crop ML predictions, and analyze sales performance.
+Current System Data Context:
+- Inventory: {inv_str or 'No inventory data.'}
+- Active Logistics: {shp_str or 'No active shipments.'}
+- Recent Sales (Analytics): {sales_str or 'No sales recorded yet.'}
+- Recent Crop AI Predictions: {crop_str or 'No crops predicted yet.'}
+Use this live data to answer the user's questions accurately. Be concise and professional."""
+
+        # Format messages for Anthropic (must start with user)
+        anthropic_messages = []
+        for msg in request.messages:
+            if msg.role == 'assistant' and 'Hello! I am your AgriChain AI' in msg.content:
+                continue
+            role = msg.role if msg.role in ['user', 'assistant'] else 'user'
+            anthropic_messages.append({"role": role, "content": msg.content})
+            
+        # Ensure it starts with user
+        if not anthropic_messages or anthropic_messages[0]['role'] != 'user':
+            anthropic_messages.insert(0, {"role": "user", "content": "Hello."})
+
+        client = anthropic.Anthropic(api_key=api_key)
+        response = client.messages.create(
+            model="claude-3-haiku-20240307",
+            max_tokens=1024,
+            system=system_prompt,
+            messages=anthropic_messages
+        )
+        
+        return {"reply": response.content[0].text}
+    except Exception as e:
+        return {"reply": f"An error occurred while calling the AI: {str(e)}"}

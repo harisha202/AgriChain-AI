@@ -36,7 +36,7 @@ def get_demand_forecast(request: ForecastRequest, db: Session = Depends(get_db),
     return ForecastResponse(crop_name=request.crop_name, forecasts=results)
 
 @router.get("/accuracy")
-def get_forecast_accuracy(db: Session = Depends(get_db)):
+def get_forecast_accuracy(db: Session = Depends(get_db), current_user: User = Depends(get_current_user)):
     # This is a pandas-powered analytics endpoint that compares Forecasts vs SalesHistory
     # Get all forecasts that have a matching sales date
     query = """
