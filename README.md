@@ -36,14 +36,8 @@ Pandas: Powerful data manipulation for aggregating Analytics KPIs and formatting
 Statsmodels / Scikit-Learn: Machine learning libraries driving the crop recommendation and SARIMA demand forecasting engines.
 OAuth2 / JWT: Secure, token-based user authentication and route protection.
 🛠️ Local Setup & Installation
-1. Clone the repository
 
-bash
-
-
-git clone https://github.com/yourusername/AgriChain-AI.git
-cd AgriChain-AI
-2. Start the Backend (FastAPI)
+1. Start the Backend (FastAPI)
 
 bash
 
@@ -54,7 +48,8 @@ source venv/bin/activate  # On Windows use: venv\Scripts\activate
 pip install -r requirements.txt
 alembic upgrade head      # Run database migrations
 python -m app.main        # Starts server on http://localhost:8000
-3. Start the Frontend (React/Vite)
+
+2. Start the Frontend (React/Vite)
 
 bash
 
