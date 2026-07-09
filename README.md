@@ -13,12 +13,14 @@ Intelligent Planning (Crop AI): Recommending the best crops to plant based on en
 Smart Storage (Inventory): Monitoring stock levels and alerting users to spoilage risks based on optimal temperature and humidity thresholds.
 Distribution Tracking (Logistics): Tracing shipments from origin to destination, automatically deducting from inventory, and securely recording sales upon delivery.
 Market Intelligence (Demand Forecast & Analytics): Using historical sales data and SARIMA time-series forecasting to predict future demand and display real-time KPIs (Revenue, Volume, Regional Distribution).
+
 🚀 Key Features
 AI Demand Forecasting: SARIMA-backed predictive models that project future crop demand and calculate Mean Absolute Error (MAE) accuracy.
 Automated Logic Chain: Delivering a shipment automatically triggers a deduction in warehouse inventory and instantly updates the Analytics revenue dashboard.
 Real-time Inventory Alerts: Automated warnings for low stock levels and critical spoilage risks.
 Role-based Authentication: Secure JWT/OAuth2 login flows for different supply chain stakeholders.
 Interactive Dashboards: Rich, Pandas-backed data visualizations utilizing Recharts.
+
 💻 Technologies Used
 AgriChain AI is built with a modern, high-performance tech stack:
 
@@ -28,6 +30,7 @@ Tailwind CSS: Fully responsive, utility-first styling for a clean and profession
 Recharts: Composable charting library used for the Demand Forecast and Analytics views.
 React Router: For seamless, client-side routing and Protected Routes.
 Lucide React: Beautiful, consistent iconography.
+
 Backend
 FastAPI (Python): High-performance backend routing and asynchronous API endpoints.
 SQLAlchemy & SQLite: Robust ORM for relational database management (easily scalable to PostgreSQL).
@@ -35,6 +38,7 @@ Alembic: Automated database schema migrations.
 Pandas: Powerful data manipulation for aggregating Analytics KPIs and formatting time-series data.
 Statsmodels / Scikit-Learn: Machine learning libraries driving the crop recommendation and SARIMA demand forecasting engines.
 OAuth2 / JWT: Secure, token-based user authentication and route protection.
+
 🛠️ Local Setup & Installation
 
 1. Start the Backend (FastAPI)
