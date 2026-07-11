@@ -2,8 +2,11 @@ import React, { useState, useEffect } from 'react';
 import { Package, AlertTriangle, Plus, X } from 'lucide-react';
 import client from '../api/client';
 import StatusBadge from '../components/ui/StatusBadge';
+import { SkeletonKpiRow, SkeletonTable } from '../components/ui/Skeleton';
+import { useDocumentTitle } from '../hooks/useDocumentTitle';
 
 export default function Inventory() {
+  useDocumentTitle('Inventory');
   const [inventory, setInventory] = useState([]);
   const [alerts, setAlerts] = useState({ low_stock_items: [], spoilage_risks: [] });
   const [loading, setLoading] = useState(true);
@@ -56,10 +59,17 @@ export default function Inventory() {
     }
   };
 
-  if (loading) return <div className="p-8 text-slate-500">Loading inventory data...</div>;
+  if (loading) return (
+    <div className="min-h-full bg-blue-50/50 w-full animate-fade-in">
+      <div className="p-8 max-w-7xl mx-auto">
+        <SkeletonKpiRow count={2} />
+        <SkeletonTable rows={6} cols={6} />
+      </div>
+    </div>
+  );
 
   return (
-    <div className="min-h-full bg-blue-50/50 w-full">
+    <div className="min-h-full bg-blue-50/50 w-full animate-fade-in">
       <div className="p-8 max-w-7xl mx-auto">
       <div className="flex items-center justify-between mb-8">
         <div className="flex items-center gap-3">

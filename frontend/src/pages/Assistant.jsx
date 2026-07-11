@@ -1,8 +1,10 @@
 import React, { useState, useRef, useEffect } from 'react';
 import { Bot, Send, User, Sparkles } from 'lucide-react';
 import client from '../api/client';
+import { useDocumentTitle } from '../hooks/useDocumentTitle';
 
 export default function Assistant() {
+  useDocumentTitle('Assistant');
   const [messages, setMessages] = useState([
     { role: 'assistant', content: 'Hello! I am your AgriChain AI Assistant. I can help you analyze your crop predictions, inventory, and logistics. How can I help you optimize your supply chain today?' }
   ]);
@@ -42,7 +44,7 @@ export default function Assistant() {
   };
 
   return (
-    <div className="flex-1 flex flex-col h-full bg-teal-50/50 relative">
+    <div className="flex-1 flex flex-col h-full bg-teal-50/50 relative animate-fade-in">
       <div className="bg-white border-b border-slate-200 px-8 py-6 flex items-center justify-between z-10 shadow-sm">
         <div className="flex items-center gap-3">
           <div className="p-3 bg-primary/10 rounded-lg text-primary">

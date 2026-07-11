@@ -1,8 +1,10 @@
 import React, { useState } from 'react';
 import { Leaf, Sun, CloudRain, Calendar } from 'lucide-react';
 import client from '../api/client';
+import { useDocumentTitle } from '../hooks/useDocumentTitle';
 
 export default function CropRecommendation() {
+  useDocumentTitle('Crop AI');
   const [formData, setFormData] = useState({
     N: '', P: '', K: '', temperature: '', humidity: '', ph: '', rainfall: ''
   });
@@ -36,7 +38,7 @@ export default function CropRecommendation() {
   };
 
   return (
-    <div className="min-h-full bg-emerald-50/50 w-full">
+    <div className="min-h-full bg-emerald-50/50 w-full animate-fade-in">
       <div className="p-8 max-w-lg mx-auto">
       <div className="flex items-center gap-3 mb-6">
         <div className="p-3 bg-primary/10 rounded-lg text-primary">

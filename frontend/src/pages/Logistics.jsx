@@ -2,8 +2,11 @@ import React, { useState, useEffect } from 'react';
 import { Truck, MapPin, Calendar, CheckCircle, Clock, AlertTriangle, Plus, X } from 'lucide-react';
 import client from '../api/client';
 import StatusBadge from '../components/ui/StatusBadge';
+import { SkeletonKpiRow, SkeletonTable } from '../components/ui/Skeleton';
+import { useDocumentTitle } from '../hooks/useDocumentTitle';
 
 export default function Logistics() {
+  useDocumentTitle('Logistics');
   const [shipments, setShipments] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
@@ -58,10 +61,17 @@ export default function Logistics() {
     }
   };
 
-  if (loading) return <div className="p-8 text-slate-500">Loading logistics data...</div>;
+  if (loading) return (
+  <div className="min-h-full bg-amber-50/50 w-full flex flex-col animate-fade-in">
+    <div className="p-8 max-w-7xl mx-auto flex-1 w-full">
+      <SkeletonKpiRow count={3} />
+      <SkeletonTable rows={6} cols={5} />
+    </div>
+  </div>
+);
 
   return (
-    <div className="min-h-full bg-amber-50/50 w-full flex flex-col">
+    <div className="min-h-full bg-amber-50/50 w-full flex flex-col animate-fade-in">
       <div className="p-8 max-w-7xl mx-auto flex-1 w-full">
       <div className="flex items-center justify-between mb-8">
         <div className="flex items-center gap-3">

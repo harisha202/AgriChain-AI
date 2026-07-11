@@ -2,8 +2,10 @@ import React, { useState } from 'react';
 import { TrendingUp, Calendar } from 'lucide-react';
 import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer } from 'recharts';
 import client from '../api/client';
+import { useDocumentTitle } from '../hooks/useDocumentTitle';
 
 export default function DemandForecast() {
+  useDocumentTitle('Forecast');
   const [cropName, setCropName] = useState('rice');
   const [daysAhead, setDaysAhead] = useState(30);
   const [forecastData, setForecastData] = useState([]);
@@ -45,7 +47,7 @@ export default function DemandForecast() {
   };
 
   return (
-    <div className="min-h-full bg-purple-50/50 w-full">
+    <div className="min-h-full bg-purple-50/50 w-full animate-fade-in">
       <div className="p-8 max-w-6xl mx-auto">
       <div className="flex items-center gap-3 mb-6">
         <div className="p-3 bg-primary/10 rounded-lg text-primary">

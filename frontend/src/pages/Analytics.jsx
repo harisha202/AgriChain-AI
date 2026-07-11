@@ -2,10 +2,13 @@ import React, { useState, useEffect } from 'react';
 import { BarChart2, TrendingUp, DollarSign, Package } from 'lucide-react';
 import { AreaChart, Area, BarChart, Bar, PieChart, Pie, Cell, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer } from 'recharts';
 import client from '../api/client';
+import { SkeletonKpiRow, SkeletonChartGrid } from '../components/ui/Skeleton';
+import { useDocumentTitle } from '../hooks/useDocumentTitle';
 
 const COLORS = ['#1F7A3F', '#E0A526', '#334155', '#94a3b8'];
 
 export default function Analytics() {
+  useDocumentTitle('Analytics');
   const [data, setData] = useState(null);
   const [loading, setLoading] = useState(true);
 
@@ -23,11 +26,18 @@ export default function Analytics() {
     fetchAnalytics();
   }, []);
 
-  if (loading) return <div className="p-8 text-slate-500">Loading analytics...</div>;
+  if (loading) return (
+  <div className="min-h-full bg-indigo-50/50 w-full animate-fade-in">
+    <div className="p-8 max-w-7xl mx-auto">
+      <SkeletonKpiRow count={4} />
+      <SkeletonChartGrid count={4} />
+    </div>
+  </div>
+);
   if (!data || data.message) return <div className="p-8 text-slate-500">{data?.message || 'Failed to load data.'}</div>;
 
   return (
-    <div className="min-h-full bg-indigo-50/50 w-full">
+    <div className="min-h-full bg-indigo-50/50 w-full animate-fade-in">
       <div className="p-8 max-w-7xl mx-auto">
       <div className="flex items-center gap-3 mb-8">
         <div className="p-3 bg-primary/10 rounded-lg text-primary">
@@ -78,7 +88,10 @@ export default function Analytics() {
                 <CartesianGrid strokeDasharray="3 3" vertical={false} />
                 <XAxis dataKey="sale_date" tick={{fontSize: 12}} />
                 <YAxis tick={{fontSize: 12}} tickFormatter={(v) => `$${v/1000}k`} />
-                <Tooltip />
+                <Tooltip 
+                  contentStyle={{ backgroundColor: '#ffffff', color: '#0f172a', border: '1px solid #e2e8f0', borderRadius: '8px', boxShadow: '0 4px 6px -1px rgb(0 0 0 / 0.1)' }} 
+                  itemStyle={{ color: '#0f172a', fontWeight: 600 }} 
+                />
                 <Area type="monotone" dataKey="revenue" stroke="#1F7A3F" fillOpacity={1} fill="url(#colorRev)" />
               </AreaChart>
             </ResponsiveContainer>
@@ -94,7 +107,11 @@ export default function Analytics() {
                 <CartesianGrid strokeDasharray="3 3" vertical={false} />
                 <XAxis dataKey="region" tick={{fontSize: 12}} />
                 <YAxis tick={{fontSize: 12}} />
-                <Tooltip cursor={{fill: '#f1f5f9'}} />
+                <Tooltip 
+                  cursor={{fill: '#f1f5f9'}} 
+                  contentStyle={{ backgroundColor: '#ffffff', color: '#0f172a', border: '1px solid #e2e8f0', borderRadius: '8px', boxShadow: '0 4px 6px -1px rgb(0 0 0 / 0.1)' }} 
+                  itemStyle={{ color: '#0f172a', fontWeight: 600 }}
+                />
                 <Bar dataKey="quantity_sold" fill="#E0A526" radius={[4, 4, 0, 0]} />
               </BarChart>
             </ResponsiveContainer>
@@ -122,8 +139,12 @@ export default function Analytics() {
                     <Cell key={`cell-${index}`} fill={COLORS[index % COLORS.length]} />
                   ))}
                 </Pie>
-                <Tooltip formatter={(value) => `$${value.toLocaleString()}`} />
-                <Legend />
+                <Tooltip 
+                  formatter={(value) => `$${value.toLocaleString()}`}
+                  contentStyle={{ backgroundColor: '#ffffff', color: '#0f172a', border: '1px solid #e2e8f0', borderRadius: '8px', boxShadow: '0 4px 6px -1px rgb(0 0 0 / 0.1)' }} 
+                  itemStyle={{ color: '#0f172a', fontWeight: 600 }}
+                />
+                <Legend wrapperStyle={{ paddingTop: '20px', fontWeight: 500, color: '#334155' }} />
               </PieChart>
             </ResponsiveContainer>
           </div>
